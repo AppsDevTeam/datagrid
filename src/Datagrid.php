@@ -8,7 +8,7 @@
  * @author     Jan Skrasek
  */
 
-namespace Nextras\Datagrid;
+namespace ADT\Datagrid;
 
 use Nette\Application\UI;
 use Nette\Callback;
@@ -338,12 +338,14 @@ class Datagrid extends UI\Control
 					$this->paginator->page = $this->page = 1;
 				}
 			}
-
-			$this->data = $this->dataSourceCallback->invokeArgs(array(
-				$this->filterDataSource,
-				$this->orderColumn ? array($this->orderColumn, strtoupper($this->orderType)) : NULL,
-				$onlyRow ? NULL : $this->paginator,
-			));
+			
+			if(!$this->data) {
+				$this->data = $this->dataSourceCallback->invokeArgs(array(
+					$this->filterDataSource,
+					$this->orderColumn ? array($this->orderColumn, strtoupper($this->orderType)) : NULL,
+					$onlyRow ? NULL : $this->paginator,
+				));
+			}
 		}
 
 		if ($key === NULL) {
@@ -410,7 +412,7 @@ class Datagrid extends UI\Control
 
 	public function createComponentForm()
 	{
-		$form = new UI\Form;
+		$form = new UI\Form($this, 'form');
 
 		if ($this->editFormFactory && ($this->editRowKey || !empty($_POST['edit']))) {
 			$data = $this->editRowKey && empty($_POST) ? $this->getData($this->editRowKey) : NULL;
@@ -429,7 +431,11 @@ class Datagrid extends UI\Control
 		}
 
 		if ($this->filterFormFactory) {
-			$form['filter'] = $this->filterFormFactory->invoke();
+			$_filter = $this->filterFormFactory->invoke();
+			if(empty($form['filter'])) {
+				$form['filter'] = $_filter;
+			}
+			
 			if (!isset($form['filter']['filter'])) {
 				$form['filter']->addSubmit('filter', $this->translate('Filter'));
 			}

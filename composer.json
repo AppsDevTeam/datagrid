@@ -2,13 +2,18 @@
 	"name": "nextras/datagrid",
 	"type": "library",
 	"description": "Datagrid component for Nette Framework.",
-	"keywords": ["nextras", "nette", "datagrid"],
+	"keywords": ["nextras", "appsdevteam", "nette", "datagrid"],
 	"license": ["MIT"],
 	"authors": [
 		{
 			"name": "Jan Skrasek",
 			"email": "hrach.cz@gmail.com",
 			"homepage": "http://jan.skrasek.com"
+		},
+		{
+			"name": "Tomas Kudelka",
+			"email": "tomas@appsdevteam.com",
+			"homepage": "http://appsdevteam.com"
 		}
 	],
 	"require": {

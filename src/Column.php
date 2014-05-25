@@ -8,7 +8,7 @@
  * @author     Jan Skrasek
  */
 
-namespace Nextras\Datagrid;
+namespace ADT\Datagrid;
 
 use Nette;
 
