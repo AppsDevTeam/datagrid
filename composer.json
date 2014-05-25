@@ -29,6 +29,6 @@
 		}
 	},
 	"autoload": {
-		"psr-4": { "Nextras\\Datagrid\\": "src/" }
+		"psr-4": { "ADT\\Datagrid\\": "src/" }
 	}
 }
