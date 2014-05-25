@@ -1,5 +1,5 @@
 {
-	"name": "nextras/datagrid",
+	"name": "adt/datagrid",
 	"type": "library",
 	"description": "Datagrid component for Nette Framework.",
 	"keywords": ["nextras", "appsdevteam", "nette", "datagrid"],
