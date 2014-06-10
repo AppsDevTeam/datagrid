@@ -10,7 +10,7 @@ See demos: http://nextras.cz/datagrid
 The best way to install is using [Composer](http://getcomposer.org/):
 
 ```sh
-$ composer require nextras/datagrid
+$ composer require adt/datagrid
 ```
 
 ## Documentation
