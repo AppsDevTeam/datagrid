@@ -75,10 +75,12 @@
 {/define}
 
 {define row}
-	<tr n:snippet="rows-$primary">
+	<tr n:snippet="rows-$primary" {include tr-attribs}>
 		{include #row-inner}
 	</tr>
 {/define}
+
+{define tr-attribs}{/define}
 
 {define row-actions-edit-link}
 	<a href="{link edit! $primary}" class="ajax" data-datagrid-edit>{$control->translate(Edit)}</a>
