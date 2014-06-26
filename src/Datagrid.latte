@@ -55,7 +55,7 @@
 		{formContainer filter}
 		{foreach $columns as $column}
 			<th class="grid-col-{$column->name}">
-				{if isset($_l->blocks['col-filter-'.$column->name])}
+				{if isset($_b->blocks['col-filter-'.$column->name])}
 					{include #"col-filter-{$column->name}" form => $_form, _form => $_form, column => $column}
 				{elseif isset($_form[$column->name])}
 					{include #col-filter form => $_form, _form => $_form, column => $column}
@@ -93,7 +93,7 @@
 	{var $editRow = $editRowKey == $primary && $primary !== NULL && $editRowKey !== NULL}
 	{foreach $columns as $column}
 		{var $cell = $control->getter($row, $column->name, FALSE)}
-		{if $editRow && $column->name != $rowPrimaryKey && (isset($_form['edit'][$column->name]) || isset($_l->blocks['cell-edit-'.$column->name]))}
+		{if $editRow && $column->name != $rowPrimaryKey && (isset($_form['edit'][$column->name]) || isset($_b->blocks['cell-edit-'.$column->name]))}
 			<td class="grid-col-{$column->name}">
 				{formContainer edit}
 					{ifset #cell-edit-$column->name}
@@ -168,8 +168,8 @@
 
 {form form class => 'ajax'}
 {var $template->hasActionsColumn =
-	isset($_l->blocks['row-actions']) ||
-	isset($_l->blocks['global-actions']) ||
+	isset($_b->blocks['row-actions']) ||
+	isset($_b->blocks['global-actions']) ||
 	isset($_form['filter']) ||
 	(bool) $control->getEditFormFactory()
 }
