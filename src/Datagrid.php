@@ -416,7 +416,10 @@ class Datagrid extends UI\Control
 		$form = new UI\Form($this, 'form');
 
 		if ($this->filterFormFactory) {
-			$form['filter'] = Callback::invoke($this->filterFormFactory);
+			$_filter = Callback::invoke($this->filterFormFactory);
+			if(empty($form['filter'])) {
+				$form['filter'] = $_filter;
+			}
 			
 			if (!isset($form['filter']['filter'])) {
 				$form['filter']->addSubmit('filter', $this->translate('Filter'));
