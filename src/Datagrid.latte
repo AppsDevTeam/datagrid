@@ -167,9 +167,10 @@
 {/foreach}
 
 {form form class => 'ajax'}
+{? $_internal = isset($_b) ? $_b : $_l }
 {var $template->hasActionsColumn =
-	isset($_b->blocks['row-actions']) ||
-	isset($_b->blocks['global-actions']) ||
+	isset($_internal->blocks['row-actions']) ||
+	isset($_internal->blocks['global-actions']) ||
 	isset($_form['filter']) ||
 	(bool) $control->getEditFormFactory()
 }
