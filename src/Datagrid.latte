@@ -55,11 +55,11 @@
 		{formContainer filter}
 		{foreach $columns as $column}
 			<th class="grid-col-{$column->name}">
-				{if isset($_b->blocks['col-filter-'.$column->name])}
+				{ifset #col-filter-{$column->name} }
 					{include #"col-filter-{$column->name}" form => $_form, _form => $_form, column => $column}
 				{elseif isset($_form[$column->name])}
 					{include #col-filter form => $_form, _form => $_form, column => $column}
-				{/if}
+				{/ifset}
 			</th>
 		{/foreach}
 		<th class="grid-col-actions">
