@@ -61,7 +61,7 @@ class Datagrid extends UI\Control
 	protected $filterFormFactory;
 
 	/** @var array */
-	protected $filterDefaults;
+	protected $filterDefaults = array();
 
 	/** @var Paginator */
 	protected $paginator;
@@ -183,6 +183,10 @@ class Datagrid extends UI\Control
 		$this->filterFormFactory = $filterFormFactory;
 	}
 
+	public function setFilterDefaults($defaults)
+	{
+		$this->filterDefaults = $defaults;
+	}
 
 
 	public function getFilterFormFactory()
@@ -427,12 +431,6 @@ class Datagrid extends UI\Control
 			if (!isset($form['filter']['cancel'])) {
 				$form['filter']->addSubmit('cancel', $this->translate('Cancel'));
 			}
-
-			$this->filterDefaults = array();
-			foreach ($form['filter']->controls as $name => $control) {
-				$this->filterDefaults[$name] = $control->getValue();
-			}
-			$this->filterDefaults = $this->filterFormFilter($this->filterDefaults);
 
 			if (!$this->filterDataSource) {
 				$this->filterDataSource = $this->filterDefaults;

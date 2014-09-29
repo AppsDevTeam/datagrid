@@ -55,9 +55,9 @@
 		{formContainer filter}
 		{foreach $columns as $column}
 			<th class="grid-col-{$column->name}">
-				{ifset #col-filter-{$column->name} }
+				{ifset #col-filter-{$column->name}}
 					{include #"col-filter-{$column->name}" form => $_form, _form => $_form, column => $column}
-				{elseif isset($_form[$column->name])}
+				{elseifset $_form[$column->name]}
 					{include #col-filter form => $_form, _form => $_form, column => $column}
 				{/ifset}
 			</th>
