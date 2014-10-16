@@ -22,22 +22,30 @@
 	{/if}
 {/define}
 
+{define col-head}
+	{if $column->canSort()}
+		<a href="{link sort! orderColumn => $column->getNewState() ? $column->name : NULL, orderType => $column->getNewState()}" class="ajax">{_}{$column->label}{/_}</a>
+		{if $column->isAsc()}
+			<span class="grid-sort-symbol grid-sort-symbol-asc"><em>&#9650;</em></span>
+		{elseif $column->isDesc()}
+			<span class="grid-sort-symbol grid-sort-symbol-desc"><em>&#9660;</em></span>
+		{else}
+			<span class="grid-sort-symbol grid-sort-symbol-no"></span>
+		{/if}
+	{else}
+		{_}{$column->label}{/_}
+	{/if}
+{/define}
+
 {define row-head-colums}
 	<tr class="grid-columns">
 		{foreach $columns as $column}
 			<th class="grid-col-{$column->name}">
-				{if $column->canSort()}
-					<a href="{link sort! orderColumn => $column->getNewState() ? $column->name : NULL, orderType => $column->getNewState()}" class="ajax">{_}{$column->label}{/_}</a>
-					{if $column->isAsc()}
-						<span class="grid-sort-symbol grid-sort-symbol-asc"><em>&#9650;</em></span>
-					{elseif $column->isDesc()}
-						<span class="grid-sort-symbol grid-sort-symbol-desc"><em>&#9660;</em></span>
-					{else}
-						<span class="grid-sort-symbol grid-sort-symbol-no"></span>
-					{/if}
-				{else}
-					{_}{$column->label}{/_}
-				{/if}
+				{ifset #col-head-{$column->name}}
+					{include #"col-head-{$column->name}" form => $_form, _form => $_form, column => $column}
+				{elseif isset($_b->blocks['col-head'])}{* TODO: BUG v Nette - nefunguje {elseifset #col-head} *}
+					{include #col-head form => $_form, _form => $_form, column => $column}
+				{/ifset}
 			</th>
 		{/foreach}
 		{if $template->hasActionsColumn}
