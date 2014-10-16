@@ -297,7 +297,7 @@ class Datagrid extends UI\Control
 	}
 	
 	/** @deprecated */
-	function invalidateRow($primaryValue = NULL)
+	function invalidateRow($primaryValue)
 	{
 		$this->redrawRow($primaryValue);
 	}
