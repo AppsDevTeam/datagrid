@@ -284,9 +284,26 @@ class Datagrid extends UI\Control
 		$this->template->render();
 	}
 
+	/** @deprecated */
+	function invalidateControl($snippet = NULL)
+	{
+		$this->redrawControl($snippet);
+	}
+
+	/** @deprecated */
+	function validateControl($snippet = NULL)
+	{
+		$this->redrawControl($snippet, FALSE);
+	}
+	
+	/** @deprecated */
+	function invalidateRow($primaryValue = NULL)
+	{
+		$this->redrawRow($primaryValue);
+	}
 
 
-	public function invalidateRow($primaryValue)
+	public function redrawRow($primaryValue)
 	{
 		if ($this->presenter->isAjax()) {
 			if (isset($this->filterDataSource[$this->rowPrimaryKey])) {
@@ -299,16 +316,16 @@ class Datagrid extends UI\Control
 			}
 
 			$this->filterDataSource[$this->rowPrimaryKey][] = $primaryValue;
-			parent::invalidateControl('rows');
-			$this->invalidateControl('rows-' . $primaryValue);
+			parent::redrawControl('rows');
+			$this->redrawControl('rows-' . $primaryValue);
 		}
 	}
 
 
 
-	public function invalidateControl($snippet = NULL)
+	public function redrawControl($snippet = NULL)
 	{
-		parent::invalidateControl($snippet);
+		parent::redrawControl($snippet);
 		if ($snippet === NULL || $snippet === 'rows') {
 			$this->template->echoSnippets = TRUE;
 		}
@@ -394,10 +411,10 @@ class Datagrid extends UI\Control
 	public function handleEdit($primaryValue, $cancelEditPrimaryValue = NULL)
 	{
 		$this->editRowKey = $primaryValue;
-		$this->invalidateRow($primaryValue);
+		$this->redrawRow($primaryValue);
 		if ($cancelEditPrimaryValue) {
 			foreach (explode(',', $cancelEditPrimaryValue) as $pv) {
-				$this->invalidateRow($pv);
+				$this->redrawRow($pv);
 			}
 		}
 	}
@@ -407,7 +424,7 @@ class Datagrid extends UI\Control
 	public function handleSort()
 	{
 		if ($this->presenter->isAjax()) {
-			$this->invalidateControl('rows');
+			$this->redrawControl('rows');
 		} else {
 			$this->redirect('this');
 		}
@@ -480,11 +497,11 @@ class Datagrid extends UI\Control
 			}
 			if ($form['edit']['cancel']->isSubmittedBy() || ($form['edit']['save']->isSubmittedBy() && $form['edit']->isValid())) {
 				$editRowKey = $form['edit'][$this->rowPrimaryKey]->getValue();
-				$this->invalidateRow($editRowKey);
+				$this->redrawRow($editRowKey);
 				$this->getData($editRowKey);
 			}
 			if ($this->editRowKey !== NULL) {
-				$this->invalidateRow($this->editRowKey);
+				$this->redrawRow($this->editRowKey);
 			}
 		}
 
@@ -497,14 +514,14 @@ class Datagrid extends UI\Control
 					$this->page = $this->paginator->page = 1;
 				}
 				$this->filter = $this->filterDataSource = $values;
-				$this->invalidateControl('rows');
+				$this->redrawControl('rows');
 			} elseif ($form['filter']['cancel']->isSubmittedBy()) {
 				if ($this->paginator) {
 					$this->page = $this->paginator->page = 1;
 				}
 				$this->filter = $this->filterDataSource = $this->filterDefaults;
 				$form['filter']->setValues($this->filter, TRUE);
-				$this->invalidateControl('rows');
+				$this->redrawControl('rows');
 			}
 		}
 
@@ -539,7 +556,7 @@ class Datagrid extends UI\Control
 	public function handlePaginate()
 	{
 		if ($this->presenter->isAjax()) {
-			$this->invalidateControl('rows');
+			$this->redrawControl('rows');
 		} else {
 			$this->redirect('this');
 		}
