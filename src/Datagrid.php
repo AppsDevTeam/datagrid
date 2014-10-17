@@ -575,5 +575,18 @@ class Datagrid extends UI\Control
 			return $val !== null;
 		});
 	}
+	
+	public function saveState(array &$params, $reflection = NULL) {
+		parent::saveState($params, $reflection);
+		
+		if (isset($params['filter'])) {
+			foreach ($params['filter'] as $k => $v) {
+				if ($v instanceof \DateTime) {
+					$params['filter'][$k] = $v->format('Y-m-d\TH:i:se');
+				}
+			}
+		}
+		
+	}
 
 }
