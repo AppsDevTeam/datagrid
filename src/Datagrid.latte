@@ -116,11 +116,11 @@
 			</td>
 		{else}
 			{ifset #col-$column->name}
-				{include #"col-{$column->name}" row => $row, cell => $cell, iterator => $iterator}
+				{include #"col-{$column->name}" row => $row, cell => $cell, iterator => $iterator, column => $column}
 			{else}
 				<td class="grid-col-{$column->name}">
 					{ifset #cell-$column->name}
-						{include #"cell-{$column->name}" row => $row, cell => $cell, iterator => $iterator}
+						{include #"cell-{$column->name}" row => $row, cell => $cell, iterator => $iterator, column => $column}
 					{else}
 						{$cell}
 					{/ifset}
