@@ -342,7 +342,9 @@ class Datagrid extends UI\Control
 		parent::attached($presenter);
 		$this->filterDataSource = $this->filter;
 		
-		$this['form']['filter']->setDefaults($this->filterDefaults);
+		if (isset($this['form']['filter'])) {
+			$this['form']['filter']->setDefaults($this->filterDefaults);
+		}
 	}
 
 
