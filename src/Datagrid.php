@@ -295,7 +295,7 @@ class Datagrid extends UI\Control
 	{
 		$this->redrawControl($snippet, FALSE);
 	}
-	
+
 	/** @deprecated */
 	function invalidateRow($primaryValue)
 	{
@@ -341,10 +341,6 @@ class Datagrid extends UI\Control
 	{
 		parent::attached($presenter);
 		$this->filterDataSource = $this->filter;
-		
-		if (isset($this['form']['filter'])) {
-			$this['form']['filter']->setDefaults($this->filterDefaults);
-		}
 	}
 
 
@@ -364,7 +360,7 @@ class Datagrid extends UI\Control
 					$this->paginator->page = $this->page = 1;
 				}
 			}
-			
+
 			if(!$this->data) {
 				$this->data = Callback::invokeArgs($this->dataSourceCallback, array(
 					$this->filterDataSource,
@@ -445,7 +441,7 @@ class Datagrid extends UI\Control
 			if(empty($form['filter'])) {
 				$form['filter'] = $_filter;
 			}
-			
+
 			if (!isset($form['filter']['filter'])) {
 				$form['filter']->addSubmit('filter', $this->translate('Filter'));
 			}
@@ -456,6 +452,8 @@ class Datagrid extends UI\Control
 			if (!$this->filterDataSource) {
 				$this->filterDataSource = $this->filterDefaults;
 			}
+
+			$form['filter']->setDefaults($this->filterDefaults);
 		}
 
 		if ($this->editFormFactory && ($this->editRowKey !== NULL || !empty($_POST['edit']))) {
@@ -539,6 +537,7 @@ class Datagrid extends UI\Control
 	public function loadState(array $params)
 	{
 		parent::loadState($params);
+
 		if ($this->paginator) {
 			$this->paginator->page = $this->page;
 		}
@@ -579,10 +578,10 @@ class Datagrid extends UI\Control
 			return $val !== null;
 		});
 	}
-	
+
 	public function saveState(array &$params, $reflection = NULL) {
 		parent::saveState($params, $reflection);
-		
+
 		if (isset($params['filter'])) {
 			foreach ($params['filter'] as $k => $v) {
 				if ($v instanceof \DateTime) {
@@ -590,7 +589,7 @@ class Datagrid extends UI\Control
 				}
 			}
 		}
-		
+
 	}
 
 }
