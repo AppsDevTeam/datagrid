@@ -39,6 +39,14 @@ class Datagrid extends UI\Control
 	/** @persistent */
 	public $page = 1;
 
+	/**
+	 * Má se filtr vykreslovat jako oddělený formulář? Pokud ano, tak pro
+	 * vykreslování filtru používáme {control myGridControl:filter} a pro grid
+	 * {control myGridControl}. Pokud ne, tak pro celý grid {control myGridControl}.
+	 * @var boolean
+	 */
+	public $separateFilter = FALSE;
+
 	/** @var array */
 	protected $filterDataSource = array();
 
@@ -259,6 +267,17 @@ class Datagrid extends UI\Control
 
 	public function render()
 	{
+		$this->template->separateFilter = $this->separateFilter;
+		$this->template->render = NULL;
+		$this->renderDefault();
+	}
+
+	public function renderFilter() {
+		$this->template->render = 'filter';
+		$this->renderDefault();
+	}
+
+	protected function renderDefault() {
 		if ($this->filterFormFactory) {
 			$this['form']['filter']->setDefaults($this->filter);
 		}
