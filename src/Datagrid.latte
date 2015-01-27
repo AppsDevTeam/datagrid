@@ -26,6 +26,10 @@
 		{/formContainer}
 	{/define}
 
+	{foreach $cellsTemplates as $cellsTemplate}
+		{includeblock $cellsTemplate}
+	{/foreach}
+
 	{form form class => 'ajax', id => $form->getElementPrototype()->id .'-filter'}
 		{ifset $_form['filter']}
 			{include #single-filter}
