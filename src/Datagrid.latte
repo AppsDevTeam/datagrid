@@ -218,7 +218,6 @@
 	{var $template->hasActionsColumn =
 		isset($_internal->blocks['row-actions']) ||
 		isset($_internal->blocks['global-actions']) ||
-		isset($_form['filter']) ||
 		(bool) $control->getEditFormFactory()
 	}
 	{include #table-open-tag}
