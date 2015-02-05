@@ -9,32 +9,32 @@
 {* samostatný filter *}
 {if $render === 'filter'}
 
-	{define single-filter}
-		{formContainer filter}
-		{foreach $columns as $column}
-			<div class="grid-col-{$column->name}">
-				{ifset #col-filter-{$column->name}}
-					{include #"col-filter-{$column->name}" form => $_form, _form => $_form, column => $column}
-				{elseifset $_form[$column->name]}
-					{include #col-filter form => $_form, _form => $_form, column => $column}
-				{/ifset}
-			</div>
-		{/foreach}
-		<div class="grid-col-actions">
+	{snippet filter}
+		{define single-filter}
+			{formContainer filter}
+			{foreach $form['filter']->components as $input}
+				{if !($input instanceof \Nette\Forms\Controls\SubmitButton)}
+					{ifset #col-filter-{$input->name}}
+						{include #"col-filter-{$input->name}" form => $_form, _form => $_form, input => $input}
+					{elseifset $_form[$input->name]}
+						{include #col-filter form => $_form, _form => $_form, input => $input}
+					{/ifset}
+				{/if}
+			{/foreach}
 			{include #global-filter-actions showCancel => $showFilterCancel, _form => $_form, form => $form}
-		</div>
-		{/formContainer}
-	{/define}
+			{/formContainer}
+		{/define}
 
-	{foreach $cellsTemplates as $cellsTemplate}
-		{includeblock $cellsTemplate}
-	{/foreach}
+		{foreach $cellsTemplates as $cellsTemplate}
+			{includeblock $cellsTemplate}
+		{/foreach}
 
-	{form form class => 'ajax', id => $form->getElementPrototype()->id .'-filter'}
-		{ifset $_form['filter']}
-			{include #single-filter}
-		{/ifset}
-	{/form}
+		{form form class => 'ajax', id => $form->getElementPrototype()->id .'-filter'}
+			{ifset $_form['filter']}
+				{include #single-filter}
+			{/ifset}
+		{/form}
+	{/snippet}
 
 {* grid *}
 {else}
