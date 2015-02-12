@@ -536,7 +536,9 @@ class Datagrid extends UI\Control
 				}
 				$this->filter = $this->filterDataSource = $values;
 				$this->redrawControl('rows');
-				$this->redrawControl('filter');
+				if ($this->separateFilter) {
+					$this->redrawControl('filter');
+				}
 			} elseif ($form['filter']['cancel']->isSubmittedBy()) {
 				if ($this->paginator) {
 					$this->page = $this->paginator->page = 1;
@@ -544,7 +546,9 @@ class Datagrid extends UI\Control
 				$this->filter = $this->filterDataSource = $this->filterDefaults;
 				$form['filter']->setValues($this->filter, TRUE);
 				$this->redrawControl('rows');
-				$this->redrawControl('filter');
+				if ($this->separateFilter) {
+					$this->redrawControl('filter');
+				}
 			}
 		}
 
