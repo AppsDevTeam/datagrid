@@ -47,6 +47,24 @@ class Datagrid extends UI\Control
 	 */
 	public $separateFilter = FALSE;
 
+	/**
+	 * Mají se hodnoty z filtru ukládat do session?
+	 * @var boolean
+	 */
+	public $persistentFilter = FALSE;
+
+	const SESSION_SECTION = 'adt/datagrid';
+
+	protected function getSessionSectionName() {
+		return static::SESSION_SECTION .'/'. $this->getReflection()->getName();
+	}
+
+	protected function getSession() {
+		return $this->presenter->getSession($this->getSessionSectionName());
+	}
+
+	protected $isFormCreated = FALSE;
+
 	/** @var array */
 	protected $filterDataSource = array();
 
@@ -360,8 +378,48 @@ class Datagrid extends UI\Control
 	{
 		parent::attached($presenter);
 		$this->filterDataSource = $this->filter;
+
+		if ($this->isFormCreated) {
+			if ($this->filterFormFactory) {
+				if ($this->persistentFilter) {
+					$this->loadPersistentFilterData($this['form']);
+				}
+			}
+		}
 	}
 
+	/**
+	 * Naplní filter form daty ze session. Předpokládá připojení komponenty
+	 * k prezenteru.
+	 */
+	protected function loadPersistentFilterData($form) {
+		if (! isset($form['filter'])) return;
+
+		$session = $this->getSession();
+
+		if (empty($session->filter['filter'])) return;
+
+		$form['filter']->setDefaults($session->filter['filter']);
+		$this->setFilterDataSourceFromFilterForm($form['filter']);
+	}
+
+	protected function savePersistentFilterData($form) {
+		$session = $this->getSession();
+		$session->filter = [
+			'filter' => $form['filter']->values,
+		];
+	}
+
+	protected function setFilterDataSourceFromFilterForm($filterForm) {
+		$values = [];
+		foreach ($filterForm->values as $k => $v) {
+			if (in_array($v, ["", FALSE, NULL])) continue;
+
+			$values[$k] = $v;
+		}
+
+		$this->filterDataSource = $values;
+	}
 
 
 	protected function getData($key = NULL)
@@ -468,11 +526,11 @@ class Datagrid extends UI\Control
 				$form['filter']->addSubmit('cancel', $this->translate('Cancel'));
 			}
 
-			if (!$this->filterDataSource) {
-				$this->filterDataSource = $this->filterDefaults;
-			}
-
 			$form['filter']->setDefaults($this->filterDefaults);
+
+			if (!$this->filterDataSource) {
+				$this->setFilterDataSourceFromFilterForm($form['filter']);
+			}
 		}
 
 		if ($this->editFormFactory && ($this->editRowKey !== NULL || !empty($_POST['edit']))) {
@@ -489,6 +547,14 @@ class Datagrid extends UI\Control
 			$form['edit'][$this->rowPrimaryKey]
 				->setDefaultValue($this->editRowKey)
 				->setOption('rendered', TRUE);
+		}
+
+		if ($this->filterFormFactory) {
+			if ($this->persistentFilter) {
+				if ($this->presenter) {
+					$this->loadPersistentFilterData($form);
+				}
+			}
 		}
 
 		if ($this->translator) {
@@ -536,7 +602,9 @@ class Datagrid extends UI\Control
 				}
 				$this->filter = $this->filterDataSource = $values;
 				$this->redrawControl('rows');
-				$this->redrawControl('filter');
+				if ($this->separateFilter) {
+					$this->redrawControl('filter');
+				}
 			} elseif ($form['filter']['cancel']->isSubmittedBy()) {
 				if ($this->paginator) {
 					$this->page = $this->paginator->page = 1;
@@ -544,7 +612,13 @@ class Datagrid extends UI\Control
 				$this->filter = $this->filterDataSource = $this->filterDefaults;
 				$form['filter']->setValues($this->filter, TRUE);
 				$this->redrawControl('rows');
-				$this->redrawControl('filter');
+				if ($this->separateFilter) {
+					$this->redrawControl('filter');
+				}
+			}
+
+			if ($this->persistentFilter) {
+				$this->savePersistentFilterData($form);
 			}
 		}
 
