@@ -238,7 +238,7 @@
 					{include #row row => $row, primary => $control->getter($row, $rowPrimaryKey), '_dynSnippets' => & $_dynSnippets}
 				{/foreach}
 			{else}
-				{ifset #empty-result}{include #empty-result}{/ifset}
+				{ifset #empty-result}{include #empty-result colspan => count($columns) + $template->hasActionsColumn}{/ifset}
 			{/if}
 			{if isset($echoSnippets)}
 				{?unset($_dynSnippets)}
