@@ -213,50 +213,55 @@
 		{includeblock $cellsTemplate}
 	{/foreach}
 
-	{form form class => 'ajax'}
-	{? $_internal = isset($_b) ? $_b : $_l }
-	{var $template->hasActionsColumn =
-		isset($_internal->blocks['row-actions']) ||
-		isset($_internal->blocks['global-actions']) ||
-		(bool) $control->getEditFormFactory()
-	}
-	{include #table-open-tag}
-		<thead>
-			{include #row-head-colums}
-			{if ! $separateFilter}
-				{ifset $_form['filter']}
-					{include #row-head-filter}
-				{/ifset}
-			{/if}
-		</thead>
-		<tbody>
-			{var $template->form = $_form}
-			{var $_dynSnippets = new ArrayObject()}
-			{if count($data)}
-				{foreach $data as $row}
-					{var $template->row = $row}
-					{include #row row => $row, primary => $control->getter($row, $rowPrimaryKey), '_dynSnippets' => & $_dynSnippets}
-				{/foreach}
-			{else}
-				{ifset #empty-result}{include #empty-result colspan => count($columns) + $template->hasActionsColumn}{/ifset}
-			{/if}
-			{if isset($echoSnippets)}
-				{?unset($_dynSnippets)}
-			{else}
-				{var $_dynSnippets = iterator_to_array($_dynSnippets)}
-			{/if}
-		</tbody>
-		<tfoot>
-			{if isset($paginator)}
-			<tr>
-				<th colspan="{=count($columns) + $template->hasActionsColumn}">
-					{include #pagination}
-				</th>
-			</tr>
-			{/if}
-		</tfoot>
-	{include #table-close-tag}
-	{/form}
+	{if !count($data) && isset($_b->blocks['empty-result-table'])}
+		{include #empty-result-table}
+	{else}
+
+		{form form class => 'ajax'}
+		{? $_internal = isset($_b) ? $_b : $_l }
+		{var $template->hasActionsColumn =
+			isset($_internal->blocks['row-actions']) ||
+			isset($_internal->blocks['global-actions']) ||
+			(bool) $control->getEditFormFactory()
+		}
+		{include #table-open-tag}
+			<thead>
+				{include #row-head-colums}
+				{if ! $separateFilter}
+					{ifset $_form['filter']}
+						{include #row-head-filter}
+					{/ifset}
+				{/if}
+			</thead>
+			<tbody>
+				{var $template->form = $_form}
+				{var $_dynSnippets = new ArrayObject()}
+				{if count($data)}
+					{foreach $data as $row}
+						{var $template->row = $row}
+						{include #row row => $row, primary => $control->getter($row, $rowPrimaryKey), '_dynSnippets' => & $_dynSnippets}
+					{/foreach}
+				{else}
+					{ifset #empty-result}{include #empty-result colspan => count($columns) + $template->hasActionsColumn}{/ifset}
+				{/if}
+				{if isset($echoSnippets)}
+					{?unset($_dynSnippets)}
+				{else}
+					{var $_dynSnippets = iterator_to_array($_dynSnippets)}
+				{/if}
+			</tbody>
+			<tfoot>
+				{if isset($paginator)}
+				<tr>
+					<th colspan="{=count($columns) + $template->hasActionsColumn}">
+						{include #pagination}
+					</th>
+				</tr>
+				{/if}
+			</tfoot>
+		{include #table-close-tag}
+		{/form}
+	{/if}
 	{/snippet}
 	</div>
 {/if}
