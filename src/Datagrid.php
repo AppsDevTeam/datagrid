@@ -513,6 +513,8 @@ class Datagrid extends UI\Control
 	{
 		$form = new UI\Form($this, 'form');
 
+		$form->getElementPrototype()->class[] = 'ajax';
+
 		if ($this->filterFormFactory) {
 			$_filter = Callback::invoke($this->filterFormFactory);
 			if(empty($form['filter'])) {

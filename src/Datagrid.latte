@@ -29,7 +29,7 @@
 			{includeblock $cellsTemplate}
 		{/foreach}
 
-		{form form class => 'ajax', id => $form->getElementPrototype()->id .'-filter'}
+		{form form id => $form->getElementPrototype()->id .'-filter'}
 			{ifset $_form['filter']}
 				{include #single-filter}
 			{/ifset}
@@ -217,7 +217,7 @@
 		{include #empty-result-table}
 	{else}
 
-		{form form class => 'ajax'}
+		{form form}
 		{? $_internal = isset($_b) ? $_b : $_l }
 		{var $template->hasActionsColumn =
 			isset($_internal->blocks['row-actions']) ||
