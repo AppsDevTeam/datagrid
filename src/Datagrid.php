@@ -427,14 +427,16 @@ class Datagrid extends UI\Control
 		if (!$this->data) {
 			$onlyRow = $key !== NULL && $this->presenter->isAjax();
 			if (!$onlyRow && $this->paginator) {
-				$itemsCount = Callback::invokeArgs($this->paginatorItemsCountCallback, array(
-					$this->filterDataSource,
-					$this->orderColumn ? array($this->orderColumn, strtoupper($this->orderType)) : NULL,
-				));
+				if ($this->paginatorItemsCountCallback) {
+					$itemsCount = Callback::invokeArgs($this->paginatorItemsCountCallback, array(
+						$this->filterDataSource,
+						$this->orderColumn ? array($this->orderColumn, strtoupper($this->orderType)) : NULL,
+					));
 
-				$this->paginator->setItemCount($itemsCount);
-				if ($this->paginator->page !== $this->page) {
-					$this->paginator->page = $this->page = 1;
+					$this->paginator->setItemCount($itemsCount);
+					if ($this->paginator->page !== $this->page) {
+						$this->paginator->page = $this->page = 1;
+					}
 				}
 			}
 
@@ -471,7 +473,11 @@ class Datagrid extends UI\Control
 		if ($this->columnGetterCallback) {
 			return Callback::invokeArgs($this->columnGetterCallback, array($row, $column));
 		} else {
-			if (!isset($row->$column)) {
+			if (
+				(is_object($row) && !isset($row->$column))
+				||
+				(!is_object($row) && !isset($row[$column]))
+			) {
 				if ($need) {
 					throw new \InvalidArgumentException("Result row does not have '{$column}' column.");
 				} else {
@@ -479,7 +485,7 @@ class Datagrid extends UI\Control
 				}
 			}
 
-			return $row->$column;
+			return is_object($row) ? $row->$column : $row[$column];
 		}
 	}
 
