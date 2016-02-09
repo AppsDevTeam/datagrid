@@ -48,8 +48,10 @@ class Column extends Nette\Object
 				throw new \InvalidArgumentException('Unknown order type.');
 			}
 
-			$this->grid->orderColumn = $this->name;
-			$this->grid->orderType = $default;
+			if (!$this->grid->orderColumn) {
+				$this->grid->orderColumn = $this->name;
+				$this->grid->orderType = $default;
+			}
 		}
 		return $this;
 	}
@@ -68,7 +70,11 @@ class Column extends Nette\Object
 		if ($this->isAsc()) {
 			return Datagrid::ORDER_DESC;
 		} elseif ($this->isDesc()) {
-			return NULL;
+			if ($this->grid->getOrderStateCount() === Datagrid::ORDER_STATE_COUNT_TWO) {
+				return Datagrid::ORDER_ASC;
+			} else {
+				return NULL;
+			}
 		} else {
 			return Datagrid::ORDER_ASC;
 		}

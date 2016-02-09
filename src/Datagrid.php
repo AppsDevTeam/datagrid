@@ -27,6 +27,18 @@ class Datagrid extends UI\Control
 	/** @var string */
 	const ORDER_DESC = 'desc';
 
+	/**
+	 * Tři stavy pro řazení. (Asc, Desc, neřadit)
+	 * @var int
+	 */
+	const ORDER_STATE_COUNT_THREE = 1;
+
+	/**
+	 * Dva stavy pro řazení. (Asc, Desc)
+	 * @var int
+	 */
+	const ORDER_STATE_COUNT_TWO = 2;
+
 	/** @persistent */
 	public $filter = array();
 
@@ -38,6 +50,14 @@ class Datagrid extends UI\Control
 
 	/** @persistent */
 	public $page = 1;
+
+	/**
+	 * V jakém režimu má fungovat řazení?
+	 * @see Datagrid::ORDER_MODE_TWOWAY
+	 * @see Datagrid::ORDER_MODE_THREEWAY
+	 * @var int
+	 */
+	protected $orderStateCount = self::ORDER_STATE_COUNT_THREE;
 
 	/**
 	 * Má se filtr vykreslovat jako oddělený formulář? Pokud ano, tak pro
@@ -109,6 +129,30 @@ class Datagrid extends UI\Control
 
 	/** @var array */
 	protected $cellsTemplates = array();
+
+
+	/**
+	 * Nastaví režim řazení.
+	 * @see Datagrid::ORDER_STATE_COUNT_TWO
+	 * @see Datagrid::ORDER_STATE_COUNT_THREE
+	 * @param int $orderStateCount
+	 * @return $this
+	 */
+	public function setOrderStateCount($orderStateCount) {
+		$this->orderStateCount = $orderStateCount;
+		return $this;
+	}
+
+
+	/**
+	 * Vrátí aktuální režim řazení.
+	 * @see Datagrid::ORDER_STATE_COUNT_TWO
+	 * @see Datagrid::ORDER_STATE_COUNT_THREE
+	 * @return int
+	 */
+	public function getOrderStateCount() {
+		return $this->orderStateCount;
+	}
 
 
 
