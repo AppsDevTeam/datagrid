@@ -362,7 +362,11 @@ class Datagrid extends UI\Control
 		$this->template->cellsTemplates = $this->cellsTemplates;
 		$this->template->showFilterCancel = $this->filterDataSource != $this->filterDefaults; // @ intentionaly
 		$this->template->setFile(__DIR__ . '/Datagrid.latte');
+		
+		$errorReporting = error_reporting();
+		error_reporting(E_ALL & ~E_USER_DEPRECATED & ~E_USER_WARNING);
 		$this->template->render();
+		error_reporting($errorReporting);
 	}
 
 	/** @deprecated */
@@ -614,7 +618,7 @@ class Datagrid extends UI\Control
 		}
 
 		$form->onSuccess[] = function() {}; // fix for Nette Framework 2.0.x
-		$form->onSubmit[] = $this->processForm;
+		$form->onSubmit[] = [$this, 'processForm'];
 		return $form;
 	}
 
