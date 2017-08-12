@@ -20,7 +20,7 @@
 		"nette/application":      "~2.2",
 		"nette/component-model":  "~2.2",
 		"nette/utils":            "~2.2",
-		"nextras/latte-macros":   "~1.1.0"
+		"nextras/latte-macros":   "^2.0"
 	},
 	"extra": {
 		"branch-alias": {
