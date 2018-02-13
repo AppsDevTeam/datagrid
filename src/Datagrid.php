@@ -461,7 +461,7 @@ class Datagrid extends UI\Control
 	protected function setFilterDataSourceFromFilterForm($filterForm) {
 		$values = [];
 		foreach ($filterForm->values as $k => $v) {
-			if (in_array($v, ["", FALSE, NULL])) continue;
+			if (in_array($v, ["", FALSE, NULL], TRUE)) continue;
 
 			$values[$k] = $v;
 		}
