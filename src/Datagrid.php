@@ -412,16 +412,6 @@ class Datagrid extends UI\Control
 
 
 
-	public function redrawControl($snippet = 'rows')
-	{
-		parent::redrawControl($snippet);
-		if ($snippet === NULL || $snippet === 'rows') {
-			$this->template->echoSnippets = TRUE;
-		}
-	}
-
-
-
 	/*******************************************************************************/
 
 
