@@ -38,7 +38,7 @@
 
 {* grid *}
 {else}
-	<div class="grid" data-grid-name="{$control->getUniqueId()}">
+	<div class="adt-datagrid grid" data-grid-name="{$control->getUniqueId()}"  data-grid-nextPageUrl="{$nextPageUrl}">
 	{snippet rows}
 
 	{define table-open-tag}
@@ -57,7 +57,7 @@
 
 	{define col-head}
 		{if $column->canSort()}
-			<a href="{link sort! orderColumn => $column->getNewState() ? $column->name : NULL, orderType => $column->getNewState()}" class="ajax">{_}{$column->label}{/_}</a>
+			<a href="{link sort! orderColumn => $column->getNewState() ? $column->name : NULL, orderType => $column->getNewState()}" class="ajax">{_}{$column->label|noescape}{/_}</a>
 			{if $column->isAsc()}
 				<span class="grid-sort-symbol grid-sort-symbol-asc"><em>&#9650;</em></span>
 			{elseif $column->isDesc()}
@@ -66,7 +66,7 @@
 				<span class="grid-sort-symbol grid-sort-symbol-no"></span>
 			{/if}
 		{else}
-			{_}{$column->label}{/_}
+			{_}{$column->label|noescape}{/_}
 		{/if}
 	{/define}
 
@@ -228,9 +228,13 @@
 		{form form}
 		{? $_internal = isset($_b) ? $_b : $_l }
 		{var $template->hasActionsColumn =
-			isset($_internal->blocks['row-actions']) ||
-			isset($_internal->blocks['global-actions']) ||
-			(bool) $control->getEditFormFactory()
+			$control->showActionsColumn 
+			&& 
+			(
+				isset($_internal->blocks['row-actions']) ||
+				isset($_internal->blocks['global-actions']) ||
+				(bool) $control->getEditFormFactory()
+			)
 		}
 		{include #table-open-tag}
 			<thead>
@@ -258,14 +262,12 @@
 					{var $_dynSnippets = iterator_to_array($_dynSnippets)}
 				{/if}
 			</tbody>
-			<tfoot>
-				{if isset($paginator)}
+			<tfoot n:if="$showPaginator && $paginator">
 				<tr>
 					<th colspan="{=count($columns) + $template->hasActionsColumn}">
 						{include #pagination}
 					</th>
 				</tr>
-				{/if}
 			</tfoot>
 		{include #table-close-tag}
 		{/form}
