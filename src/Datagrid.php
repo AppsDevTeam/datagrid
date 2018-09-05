@@ -129,6 +129,9 @@ class Datagrid extends UI\Control
 
 	/** @var array */
 	protected $cellsTemplates = array();
+	
+	/** @var boolean */
+	protected $redrawOnlyRows = FALSE;
 
 
 	/**
@@ -344,6 +347,7 @@ class Datagrid extends UI\Control
 			$this['form']['filter']->setDefaults($this->filter);
 		}
 
+		$this->template->renderOnlyRows = $this->renderOnlyRows;
 		$this->template->data = $this->getData();
 		$this->template->columns = $this->columns;
 		$this->template->editRowKey = $this->editRowKey;
