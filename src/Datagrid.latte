@@ -247,19 +247,13 @@
 			</thead>
 			<tbody>
 				{var $template->form = $_form}
-				{var $_dynSnippets = new ArrayObject()}
 				{if count($data)}
 					{foreach $data as $row}
 						{var $template->row = $row}
-						{include #row row => $row, primary => $control->getter($row, $rowPrimaryKey), '_dynSnippets' => & $_dynSnippets}
+						{include #row row => $row, primary => $control->getter($row, $rowPrimaryKey)}
 					{/foreach}
 				{else}
 					{ifset #empty-result}{include #empty-result colspan => count($columns) + $template->hasActionsColumn}{/ifset}
-				{/if}
-				{if isset($echoSnippets)}
-					{?unset($_dynSnippets)}
-				{else}
-					{var $_dynSnippets = iterator_to_array($_dynSnippets)}
 				{/if}
 			</tbody>
 			<tfoot n:if="$showPaginator && $paginator">
