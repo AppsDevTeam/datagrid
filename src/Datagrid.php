@@ -137,7 +137,7 @@ class Datagrid extends UI\Control
 	 * Ma se zobrazovat sloupec se radkovymi akcemi?
 	 * @var bool
 	 */
-	protected setShowActionsColumn = TRUE;
+	protected $showActionsColumn = TRUE;
 	
 	
 
@@ -370,6 +370,18 @@ class Datagrid extends UI\Control
 				throw new \RuntimeException("Cells template '{$cellsTemplate}' does not exist.");
 			}
 		}
+		
+		$nextPageUrl = NULL;
+		if ($this->paginator) {
+			if (! $this->paginator->isLast()) {
+				$nextPageUrl = $this->link('paginate!', ['page' => $this->paginator->page + 1]);
+			}
+
+			if ($this->presenter->isAjax()) {
+				$this->presenter->payload->state[$this->getUniqueId() .'-nextPageUrl'] = $nextPageUrl;
+			}
+		}
+		$this->template->nextPageUrl = $nextPageUrl;
 
 		$this->template->cellsTemplates = $this->cellsTemplates;
 		$this->template->showFilterCancel = $this->filterDataSource != $this->filterDefaults; // @ intentionaly
