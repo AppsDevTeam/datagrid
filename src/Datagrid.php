@@ -139,6 +139,8 @@ class Datagrid extends UI\Control
 	 */
 	protected $showActionsColumn = TRUE;
 	
+	public $showPaginator = TRUE;
+	
 	
 
 
@@ -355,6 +357,7 @@ class Datagrid extends UI\Control
 			$this['form']['filter']->setDefaults($this->filter);
 		}
 
+		$this->template->showPaginator = $this->showPaginator;
 		$this->template->redrawOnlyRows = $this->redrawOnlyRows;
 		$this->template->data = $this->getData();
 		$this->template->columns = $this->columns;
