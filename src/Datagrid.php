@@ -132,6 +132,14 @@ class Datagrid extends UI\Control
 	
 	/** @var boolean */
 	protected $redrawOnlyRows = FALSE;
+	
+	/**
+	 * Ma se zobrazovat sloupec se radkovymi akcemi?
+	 * @var bool
+	 */
+	protected setShowActionsColumn = TRUE;
+	
+	
 
 
 	/**
@@ -347,7 +355,7 @@ class Datagrid extends UI\Control
 			$this['form']['filter']->setDefaults($this->filter);
 		}
 
-		$this->template->renderOnlyRows = $this->renderOnlyRows;
+		$this->template->redrawOnlyRows = $this->redrawOnlyRows;
 		$this->template->data = $this->getData();
 		$this->template->columns = $this->columns;
 		$this->template->editRowKey = $this->editRowKey;
@@ -735,6 +743,14 @@ class Datagrid extends UI\Control
 			}
 		}
 
+	}
+	
+	public function setShowActionsColumn($show = TRUE) {
+		$this->showActionsColumn = $show;
+	}
+
+	public function getShowActionsColumn() {
+		return $this->showActionsColumn;
 	}
 
 }
