@@ -476,16 +476,24 @@ class Datagrid extends UI\Control
 	}
 
 	protected function setFilterDataSourceFromFilterForm($filterForm) {
-		$values = [];
-		foreach ($filterForm->values as $k => $v) {
-			if (in_array($v, ["", FALSE, NULL, []], TRUE)) continue;
-
-			$values[$k] = $v;
-		}
-
-		$this->filterDataSource = $values;
+		$this->filterDataSource = $this->filterFilterDataSourceFromFilterForm(
+			$filterForm->getValues(TRUE)
+		);
 	}
 
+	protected function filterFilterDataSourceFromFilterForm($values) {
+		$result = [];
+
+		foreach ($values as $k => $v) {
+			if (in_array($v, ["", FALSE, NULL, []], TRUE)) {
+				continue;
+			}
+
+			$result[$k] = is_array($v) ? $this->filterFilterDataSourceFromFilterForm($v) : $v;
+		}
+
+		return $result;
+	}
 
 	protected function getData($key = NULL)
 	{
