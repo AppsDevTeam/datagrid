@@ -10,7 +10,7 @@
 
 namespace ADT\Datagrid;
 
-class Column extends Nette\Object
+class Column
 {
 	use \Nette\SmartObject;
 
