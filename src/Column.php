@@ -10,12 +10,9 @@
 
 namespace ADT\Datagrid;
 
-use Nette;
-
-
-
 class Column extends Nette\Object
 {
+	use \Nette\SmartObject;
 
 	/** @var string */
 	public $name;
