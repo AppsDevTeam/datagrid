@@ -775,5 +775,14 @@ class Datagrid extends UI\Control
 	public function getShowActionsColumn() {
 		return $this->showActionsColumn;
 	}
+	
+	public function redrawControl($snippet = null, $redraw = true)
+	{
+		if ($snippet === null && $this->separateFilter === false) {
+			parent::redrawControl('rows', $redraw);
+		} else {
+			parent::redrawControl($snippet, $redraw);
+		}
+	}
 
 }
