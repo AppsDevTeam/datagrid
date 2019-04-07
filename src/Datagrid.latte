@@ -145,7 +145,6 @@
 		{var $primary = $control->getter($row, $rowPrimaryKey)}
 		{var $editRow = $editRowKey == $primary && $primary !== NULL && $editRowKey !== NULL}
 		{foreach $columns as $column}
-			{var $cell = $control->getter($row, $column->name, FALSE)}
 			{if $editRow && $column->name != $rowPrimaryKey && (isset($_form['edit'][$column->name]) || isset($_b->blocks['cell-edit-'.$column->name]))}
 				<td class="grid-col-{$column->name}">
 					{formContainer edit}
@@ -161,33 +160,33 @@
 				</td>
 			{else}
 				{ifset #col-$column->name}
-					{include #"col-{$column->name}" row => $row, cell => $cell, iterator => $iterator, column => $column}
+					{include #"col-{$column->name}" row => $row, iterator => $iterator, column => $column}
 				{else}
 					<td class="grid-col-{$column->name}">
 						{ifset #cell-$column->name}
-							{include #"cell-{$column->name}" row => $row, cell => $cell, iterator => $iterator, column => $column}
+							{include #"cell-{$column->name}" row => $row, iterator => $iterator, column => $column}
 						{else}
-							{$cell}
+							{$control->getter($row, $column->name, FALSE)}
 						{/ifset}
 					</td>
 				{/ifset}
 			{/if}
 		{/foreach}
 		{if $this->global->hasActionsColumn}
-		<td class="grid-col-actions">
-			{if $editRow}
-				{formContainer edit}
-					{input $rowPrimaryKey class => 'grid-primary-value'}
-					{include #row-actions-edit _form => $_form, form => $form}
-				{/formContainer}
-			{else}
-				{ifset #row-actions}
-					{include #row-actions row => $row, primary => $primary}
-				{elseif $control->getEditFormFactory()}
-					{include #row-actions-edit-link row => $row, primary => $primary}
-				{/ifset}
-			{/if}
-		</td>
+			<td class="grid-col-actions">
+				{if $editRow}
+					{formContainer edit}
+						{input $rowPrimaryKey class => 'grid-primary-value'}
+						{include #row-actions-edit _form => $_form, form => $form}
+					{/formContainer}
+				{else}
+					{ifset #row-actions}
+						{include #row-actions row => $row, primary => $primary}
+					{elseif $control->getEditFormFactory()}
+						{include #row-actions-edit-link row => $row, primary => $primary}
+					{/ifset}
+				{/if}
+			</td>
 		{/if}
 	{/define}
 
