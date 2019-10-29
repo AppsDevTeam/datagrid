@@ -15,13 +15,13 @@
 			{foreach $form['filter']->components as $input}
 				{if !($input instanceof \Nette\Forms\Controls\SubmitButton)}
 					{ifset #col-filter-{$input->name}}
-						{include #"col-filter-{$input->name}" form => $_form, _form => $_form, input => $input}
+						{include #"col-filter-{$input->name}" form => $control['form'], _form => $control['form'], input => $input}
 					{elseifset $_form[$input->name]}
-						{include #col-filter form => $_form, _form => $_form, input => $input}
+						{include #col-filter form => $control['form'], _form => $control['form'], input => $input}
 					{/ifset}
 				{/if}
 			{/foreach}
-			{include #global-filter-actions showCancel => $showFilterCancel, _form => $_form, form => $form}
+			{include #global-filter-actions showCancel => $showFilterCancel, _form => $control['form'], form => $form}
 			{/formContainer}
 		{/define}
 
@@ -30,7 +30,7 @@
 		{/foreach}
 
 		{form form id => $form->getElementPrototype()->id .'-filter'}
-			{ifset $_form['filter']}
+			{ifset $control['form']['filter']}
 				{include #single-filter}
 			{/ifset}
 		{/form}
@@ -75,13 +75,13 @@
 			{foreach $columns as $column}
 				<th class="grid-col-{$column->name}">
 					{ifset #col-head-{$column->name}}
-						{include #"col-head-{$column->name}" form => $_form, _form => $_form, column => $column}
+						{include #"col-head-{$column->name}" form => $control['form'], _form => $control['form'], column => $column}
 					{elseif isset($_b->blocks['col-head'])}{* TODO: BUG v Nette - nefunguje {elseifset #col-head} *}
-						{include #col-head form => $_form, _form => $_form, column => $column}
+						{include #col-head form => $control['form'], _form => $control['form'], column => $column}
 					{/ifset}
 				</th>
 			{/foreach}
-			{if $this->global->hasActionsColumn}
+			{if $hasActionsColumn}
 				<th class="grid-col-actions">{ifset #global-actions}{include #global-actions}{/ifset}</th>
 			{/if}
 		</tr>
@@ -99,14 +99,14 @@
 			{foreach $columns as $column}
 				<th class="grid-col-{$column->name}">
 					{ifset #col-filter-{$column->name}}
-						{include #"col-filter-{$column->name}" form => $_form, _form => $_form, column => $column}
+						{include #"col-filter-{$column->name}" form => $control['form'], _form => $control['form'], column => $column}
 					{elseifset $_form[$column->name]}
-						{include #col-filter form => $_form, _form => $_form, column => $column}
+						{include #col-filter form => $control['form'], _form => $control['form'], column => $column}
 					{/ifset}
 				</th>
 			{/foreach}
 			<th class="grid-col-actions">
-				{include #global-filter-actions showCancel => $showFilterCancel, _form => $_form, form => $form}
+				{include #global-filter-actions showCancel => $showFilterCancel, _form => $control['form'], form => $form}
 			</th>
 			{/formContainer}
 		</tr>
@@ -125,12 +125,12 @@
 		{elseif $redrawOnlyRows}
 			{snippet rows-$primary}
 				<tr id="{$control->getSnippetId('rows-'. $primary)}" {include tr-attribs row => $row}>
-					{include #row-inner row => $row}
+					{include #row-inner row => $row, primary => $primary, _dynSnippets => $_dynSnippets}
 				</tr>
 			{/snippet}
 		{else}
 			<tr id="{$control->getSnippetId('rows-'. $primary)}" {include tr-attribs row => $row}>
-				{include #row-inner row => $row}
+				{include #row-inner row => $row, primary => $primary, _dynSnippets => $_dynSnippets, hasActionsColumn => $hasActionsColumn}
 			</tr>
 		{/if}
 	{/define}
@@ -145,15 +145,15 @@
 		{var $primary = $control->getter($row, $rowPrimaryKey)}
 		{var $editRow = $editRowKey == $primary && $primary !== NULL && $editRowKey !== NULL}
 		{foreach $columns as $column}
-			{if $editRow && $column->name != $rowPrimaryKey && (isset($_form['edit'][$column->name]) || isset($_b->blocks['cell-edit-'.$column->name]))}
+			{if $editRow && $column->name != $rowPrimaryKey && (isset($control['form']['edit'][$column->name]) || isset($_b->blocks['cell-edit-'.$column->name]))}
 				<td class="grid-col-{$column->name}">
 					{formContainer edit}
 						{ifset #cell-edit-$column->name}
-							{include #"cell-edit-{$column->name}" form => $_form, _form => $_form, column => $column}
+							{include #"cell-edit-{$column->name}" form => $control['form'], _form => $control['form'], column => $column}
 						{else}
 							{input $column->name}
 							{if $_form[$column->name]->hasErrors()}
-								<p class="error" n:foreach="$_form[$column->name]->getErrors() as $error">{$error}</p>
+								<p class="error" n:foreach="$control['form'][$column->name]->getErrors() as $error">{$error}</p>
 							{/if}
 						{/ifset}
 					{/formContainer}
@@ -172,12 +172,12 @@
 				{/ifset}
 			{/if}
 		{/foreach}
-		{if $this->global->hasActionsColumn}
+		{if $hasActionsColumn}
 			<td class="grid-col-actions">
 				{if $editRow}
 					{formContainer edit}
 						{input $rowPrimaryKey class => 'grid-primary-value'}
-						{include #row-actions-edit _form => $_form, form => $form}
+						{include #row-actions-edit _form => $control['form'], form => $form}
 					{/formContainer}
 				{else}
 					{ifset #row-actions}
@@ -224,8 +224,8 @@
 
 		{form form}
 		{php $_internal = isset($_b) ? $_b : $_l}
-		{var $this->global->hasActionsColumn =
-			$control->showActionsColumn
+		{var $hasActionsColumn =
+			$control->getShowActionsColumn()
 			&&
 			(
 				isset($_internal->blocks['row-actions']) ||
@@ -235,7 +235,7 @@
 		}
 		{include #table-open-tag}
 			<thead>
-				{include #row-head-colums}
+            {include #row-head-colums hasActionsColumn => $hasActionsColumn}
 				{if ! $separateFilter}
 					{ifset $_form['filter']}
 						{include #row-head-filter}
@@ -243,17 +243,18 @@
 				{/if}
 			</thead>
 			<tbody>
+            {var $form = $control['form']}
 				{if count($data)}
 					{foreach $data as $row}
-						{include #row row => $row, primary => $control->getter($row, $rowPrimaryKey), form => $_form}
+						{include #row row => $row, primary => $control->getter($row, $rowPrimaryKey), form => $_form, '_dynSnippets' => & $_dynSnippets, hasActionsColumn => $hasActionsColumn}
 					{/foreach}
 				{else}
-					{ifset #empty-result}{include #empty-result colspan => count($columns) + $this->global->hasActionsColumn}{/ifset}
+					{ifset #empty-result}{include #empty-result colspan => count($columns) + $hasActionsColumn}{/ifset}
 				{/if}
 			</tbody>
 			<tfoot n:if="$showPaginator && $paginator">
 				<tr>
-					<th colspan="{=count($columns) + $this->global->hasActionsColumn}">
+					<th colspan="{=count($columns) + $hasActionsColumn}">
 						{include #pagination}
 					</th>
 				</tr>
