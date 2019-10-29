@@ -514,7 +514,7 @@ class Datagrid extends UI\Control
 			}
 
 			if(!$this->data) {
-				$this->data = ([ $this, 'dataSourceCallback' ])(
+				$this->data = $this->getDataSourceCallback()(
 					$this->filterDataSource,
 					$this->orderColumn ? array($this->orderColumn, strtoupper($this->orderType)) : NULL,
 					$onlyRow ? NULL : $this->paginator
@@ -595,7 +595,7 @@ class Datagrid extends UI\Control
 		$form->getElementPrototype()->class[] = 'ajax';
 
 		if ($this->filterFormFactory) {
-			$_filter = ([ $this, 'filterFormFactory' ])($form);
+			$_filter = $this->getFilterFormFactory()($form);
 			if(empty($form['filter'])) {
 				$form['filter'] = $_filter;
 			}
