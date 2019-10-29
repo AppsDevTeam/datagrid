@@ -17,14 +17,14 @@
 		}
 	],
 	"require": {
-		"nette/application":      "~2.2",
-		"nette/component-model":  "~2.2",
-		"nette/utils":            "~2.2",
+		"nette/application":      "~3.0",
+		"nette/component-model":  "~3.0",
+		"nette/utils":            "~3.0",
 		"nextras/latte-macros":   "^2.0"
 	},
 	"extra": {
 		"branch-alias": {
-			"dev-master": "2.1-dev"
+			"dev-master": "3.0-dev"
 		}
 	},
 	"autoload": {

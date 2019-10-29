@@ -91,10 +91,10 @@ class Datagrid extends UI\Control
 	/** @var array */
 	protected $columns = array();
 
-	/** @var callback */
+	/** @var callable */
 	protected $columnGetterCallback;
 
-	/** @var callback */
+	/** @var callable */
 	protected $dataSourceCallback;
 
 	/** @var mixed */
@@ -103,7 +103,7 @@ class Datagrid extends UI\Control
 	/** @var mixed */
 	protected $editFormCallback;
 
-	/** @var callback */
+	/** @var callable */
 	protected $filterFormFactory;
 
 	/** @var array */
@@ -115,7 +115,7 @@ class Datagrid extends UI\Control
 	/** @var ITranslator */
 	protected $translator;
 
-	/** @var callback */
+	/** @var callable */
 	protected $paginatorItemsCountCallback;
 
 	/** @var mixed */
@@ -439,7 +439,7 @@ class Datagrid extends UI\Control
 
 
 
-	protected function attached($presenter)
+	protected function attached($presenter): void
 	{
 		parent::attached($presenter);
 		$this->filterDataSource = $this->filter;
@@ -710,7 +710,7 @@ class Datagrid extends UI\Control
 
 
 
-	public function loadState(array $params)
+	public function loadState(array $params): void
 	{
 		parent::loadState($params);
 
@@ -721,7 +721,7 @@ class Datagrid extends UI\Control
 
 
 
-	protected function createTemplate($class = NULL)
+	protected function createTemplate($class = NULL): UI\ITemplate
 	{
 		$template = parent::createTemplate($class);
 		if ($translator = $this->getTranslator()) {
@@ -755,7 +755,7 @@ class Datagrid extends UI\Control
 		});
 	}
 
-	public function saveState(array &$params, $reflection = NULL) {
+	public function saveState(array &$params, $reflection = NULL): void {
 		parent::saveState($params, $reflection);
 
 		if (isset($params['filter'])) {
@@ -776,7 +776,7 @@ class Datagrid extends UI\Control
 		return $this->showActionsColumn;
 	}
 	
-	public function redrawControl($snippet = null, $redraw = true)
+	public function redrawControl($snippet = null, $redraw = true): void
 	{
 		if ($snippet === null && $this->separateFilter === false) {
 			parent::redrawControl('rows', $redraw);
