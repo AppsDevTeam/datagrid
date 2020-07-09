@@ -72,6 +72,8 @@ class Datagrid extends UI\Control
 	 * @var boolean
 	 */
 	public $persistentFilter = FALSE;
+	
+	private $templateFile = __DIR__ . '/Datagrid.latte';
 
 	const SESSION_SECTION = 'adt/datagrid';
 
@@ -388,12 +390,16 @@ class Datagrid extends UI\Control
 
 		$this->template->cellsTemplates = $this->cellsTemplates;
 		$this->template->showFilterCancel = $this->filterDataSource != $this->filterDefaults; // @ intentionaly
-		$this->template->setFile(__DIR__ . '/Datagrid.latte');
+		$this->template->setFile($this->templateFile);
 		
 		$errorReporting = error_reporting();
 		error_reporting(E_ALL & ~E_USER_DEPRECATED & ~E_USER_WARNING);
 		$this->template->render();
 		error_reporting($errorReporting);
+	}
+	
+	function setTemplateFile($templateFile) {
+		$this->templateFile = $templateFile;
 	}
 
 	/** @deprecated */
