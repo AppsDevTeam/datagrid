@@ -1,9 +1,9 @@
 {define table-open-tag}
-    <table>
-{/define}
+<table>
+    {/define}
 
-{define table-close-tag}
-    </table>
+    {define table-close-tag}
+</table>
 {/define}
 
 {define global-filter-actions}
@@ -58,7 +58,7 @@
                 <th class="grid-col-{$column->name}">
                     {ifset #col-filter-{$column->name}}
                         {include #"col-filter-{$column->name}" form => $control['form']['filter'], column => $column}
-                    {elseifset $form[$column->name]}
+                    {elseifset $control['form']['filter'][$column->name]}
                         {include #col-filter form => $control['form']['filter'], column => $column}
                     {/ifset}
                 </th>
