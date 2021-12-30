@@ -10,7 +10,6 @@
     {if $showFilterCancel}
         {input $control['form']['cancel']}
     {/if}
-
 {/define}
 
 {define col-head}
@@ -76,18 +75,20 @@
 {/define}
 
 {define row}
+    {capture $trAttribs}{include tr-attribs row => $row}{/capture}
+
     {if !$control->isControlInvalid() && $control->isControlInvalid('rows-'.$primary)}
-        <tr n:snippet="rows-$primary" {include tr-attribs row => $row}>
+        <tr n:snippet="rows-$primary" {$trAttribs}>
             {include #row-inner row => $row}
         </tr>
     {elseif $redrawOnlyRows}
         {snippet rows-$primary}
-            <tr id="{$control->getSnippetId('rows-'. $primary)}" {include tr-attribs row => $row}>
+            <tr id="{$control->getSnippetId('rows-'. $primary)}" {$trAttribs}>
                 {include #row-inner row => $row, primary => $primary, _dynSnippets => $_dynSnippets}
             </tr>
         {/snippet}
     {else}
-        <tr id="{$control->getSnippetId('rows-'. $primary)}">
+        <tr id="{$control->getSnippetId('rows-'. $primary)}" {$trAttribs}>
             {include #row-inner row => $row, primary => $primary, _dynSnippets => $_dynSnippets, hasActionsColumn => $hasActionsColumn}
         </tr>
     {/if}
