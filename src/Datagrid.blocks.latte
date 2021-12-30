@@ -6,9 +6,6 @@
 {/define}
 
 {define global-filter-actions}
-    {dump debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS)}
-    {dump}
-
     {input filter}
     {if $showFilterCancel}
         {input $control['form']['cancel']}
@@ -36,9 +33,9 @@
         {foreach $columns as $column}
             <th class="grid-col-{$column->name}">
                 {ifset #col-head-{$column->name}}
-                    {include #"col-head-{$column->name}" form => $control['form'], _form => $control['form'], column => $column}
+                    {include #"col-head-{$column->name}" form => $control['form'], column => $column}
                 {elseif isset($_b->blocks['col-head'])}{* TODO: BUG v Nette - nefunguje {elseifset #col-head} *}
-                    {include #col-head form => $control['form'], _form => $control['form'], column => $column}
+                    {include #col-head form => $control['form'], column => $column}
                 {/ifset}
             </th>
         {/foreach}
@@ -60,15 +57,14 @@
             {foreach $columns as $column}
                 <th class="grid-col-{$column->name}">
                     {ifset #col-filter-{$column->name}}
-                        {include #"col-filter-{$column->name}" form => $control['form'], _form => $control['form'], column => $column}
-                    {elseifset $_form[$column->name]}
-                        {include #col-filter form => $control['form'], _form => $control['form'], column => $column}
+                        {include #"col-filter-{$column->name}" form => $control['form']['filter'], column => $column}
+                    {elseifset $form[$column->name]}
+                        {include #col-filter form => $control['form']['filter'], column => $column}
                     {/ifset}
                 </th>
             {/foreach}
             <th class="grid-col-actions">
-                {dump "aaa"}
-					{include #global-filter-actions showCancel => $showFilterCancel, _form => $control['form'], form => $form}
+                {include #global-filter-actions showCancel => $showFilterCancel, form => $control['form']['filter']}
             </th>
         {/formContainer}
     </tr>
@@ -111,10 +107,10 @@
             <td class="grid-col-{$column->name}">
                 {formContainer edit}
                     {ifset #cell-edit-$column->name}
-                        {include #"cell-edit-{$column->name}" form => $control['form'], _form => $control['form'], column => $column}
+                        {include #"cell-edit-{$column->name}" form => $control['form'], column => $column}
                     {else}
                         {input $column->name}
-                        {if $_form[$column->name]->hasErrors()}
+                        {if $form[$column->name]->hasErrors()}
                             <p class="error" n:foreach="$control['form'][$column->name]->getErrors() as $error">{$error}</p>
                         {/if}
                     {/ifset}
@@ -139,7 +135,7 @@
             {if $editRow}
                 {formContainer edit}
                     {input $rowPrimaryKey class => 'grid-primary-value'}
-                    {include #row-actions-edit _form => $control['form'], form => $form}
+                    {include #row-actions-edit form => $form}
                 {/formContainer}
             {else}
                 {ifset #row-actions}
@@ -153,7 +149,6 @@
 {/define}
 
 {define pagination}
-    {dump "defaultni pagination"}
     <div class="grid-paginator">
         {if $paginator->isFirst()}
             <span>« {$control->translate(First)}</span>

@@ -14,14 +14,14 @@
 				{foreach $form['filter']->components as $input}
 					{if !($input instanceof \Nette\Forms\Controls\SubmitButton)}
 						{ifset #col-filter-{$input->name}}
-							{include #"col-filter-{$input->name}" form => $control['form'], _form => $control['form'], input => $input}
-						{elseifset $_form[$input->name]}
-							{include #col-filter form => $control['form'], _form => $control['form'], input => $input}
+							{include #"col-filter-{$input->name}" form => $control['form'], input => $input}
+						{elseifset $form[$input->name]}
+							{include #col-filter form => $control['form'], input => $input}
 						{/ifset}
 					{/if}
 				{/foreach}
 
-				{include #global-filter-actions showCancel => $showFilterCancel, _form => $control['form'], form => $form}
+				{include #global-filter-actions showCancel => $showFilterCancel, form => $form}
 			{/formContainer}
 		{/define}
 
@@ -62,7 +62,7 @@
 						<thead>
 						{include #row-head-colums hasActionsColumn => $hasActionsColumn}
 							{if ! $separateFilter}
-								{ifset $_form['filter']}
+								{ifset $form['filter']}
 									{include #row-head-filter}
 								{/ifset}
 							{/if}
