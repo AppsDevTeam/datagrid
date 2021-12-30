@@ -131,19 +131,19 @@ class Datagrid extends UI\Control
 
 	/** @var array */
 	protected $cellsTemplates = array();
-	
+
 	/** @var boolean */
 	protected $redrawOnlyRows = FALSE;
-	
+
 	/**
 	 * Ma se zobrazovat sloupec se radkovymi akcemi?
 	 * @var bool
 	 */
 	protected $showActionsColumn = TRUE;
-	
+
 	public $showPaginator = TRUE;
-	
-	
+
+
 
 
 	/**
@@ -375,7 +375,7 @@ class Datagrid extends UI\Control
 				throw new \RuntimeException("Cells template '{$cellsTemplate}' does not exist.");
 			}
 		}
-		
+
 		$nextPageUrl = NULL;
 		if ($this->paginator) {
 			if (! $this->paginator->isLast()) {
@@ -506,7 +506,8 @@ class Datagrid extends UI\Control
 			$onlyRow = $key !== NULL && $this->presenter->isAjax();
 			if (!$onlyRow && $this->paginator) {
 				if ($this->paginatorItemsCountCallback) {
-					$itemsCount = ([ $this, paginatorItemsCountCallback ])(
+					$itemsCount = call_user_func(
+						$this->paginatorItemsCountCallback,
 						$this->filterDataSource,
 						$this->orderColumn ? array($this->orderColumn, strtoupper($this->orderType)) : NULL,
 					);
@@ -519,7 +520,8 @@ class Datagrid extends UI\Control
 			}
 
 			if(!$this->data) {
-				$this->data = $this->getDataSourceCallback()(
+				$this->data = call_user_func(
+					$this->dataSourceCallback,
 					$this->filterDataSource,
 					$this->orderColumn ? array($this->orderColumn, strtoupper($this->orderType)) : NULL,
 					$onlyRow ? NULL : $this->paginator
@@ -549,7 +551,7 @@ class Datagrid extends UI\Control
 	public function getter($row, $column, $need = TRUE)
 	{
 		if ($this->columnGetterCallback) {
-			return ([ $this, 'columnGetterCallback'])($row, $column);
+			return call_user_func($this->columnGetterCallback, $row, $column, $need);
 		} else {
 			if (
 				(is_object($row) && !isset($row->$column))
@@ -621,7 +623,7 @@ class Datagrid extends UI\Control
 
 		if ($this->editFormFactory && ($this->editRowKey !== NULL || !empty($_POST['edit']))) {
 			$data = $this->editRowKey !== NULL && empty($_POST) ? $this->getData($this->editRowKey) : NULL;
-			$form['edit'] = ([ $this, 'editFormFactory' ])($data);
+			$form['edit'] = call_user_func($this->editFormFactory, $data);
 
 			if (!isset($form['edit']['save']))
 				$form['edit']->addSubmit('save', 'Save');
@@ -660,7 +662,7 @@ class Datagrid extends UI\Control
 		if (isset($form['edit'])) {
 			if ($form['edit']['save']->isSubmittedBy()) {
 				if ($form['edit']->isValid()) {
-					([ $this, 'editFormCallback' ])($form['edit']);
+					call_user_func($this->editFormCallback, $form['edit']);
 				} else {
 					$this->editRowKey = $form['edit'][$this->rowPrimaryKey]->getValue();
 					$allowRedirect = FALSE;
@@ -770,7 +772,7 @@ class Datagrid extends UI\Control
 		}
 
 	}
-	
+
 	public function setShowActionsColumn($show = TRUE) {
 		$this->showActionsColumn = $show;
 	}
@@ -778,7 +780,7 @@ class Datagrid extends UI\Control
 	public function getShowActionsColumn() {
 		return $this->showActionsColumn;
 	}
-	
+
 	public function redrawControl($snippet = null, $redraw = true): void
 	{
 		if ($snippet === null && $this->separateFilter === false) {
