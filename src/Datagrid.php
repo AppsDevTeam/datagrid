@@ -476,13 +476,13 @@ class Datagrid extends UI\Control
 	protected function savePersistentFilterData($form) {
 		$session = $this->getSession();
 		$session->filter = [
-			'filter' => $form['filter']->values,
+			'filter' => $form['filter']->getUnsafeValues(NULL),
 		];
 	}
 
 	protected function setFilterDataSourceFromFilterForm($filterForm) {
 		$this->filterDataSource = $this->filterFilterDataSourceFromFilterForm(
-			$filterForm->getValues(TRUE)
+			$filterForm->getUnsafeValues(NULL)
 		);
 	}
 
@@ -680,7 +680,7 @@ class Datagrid extends UI\Control
 
 		if (isset($form['filter'])) {
 			if ($form['filter']['filter']->isSubmittedBy()) {
-				$values = $form['filter']->getValues(TRUE);
+				$values = $form['filter']->getUnsafeValues('array');
 				unset($values['filter']);
 				$values = $this->filterFormFilter($values);
 				if ($this->paginator) {
