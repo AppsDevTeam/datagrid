@@ -445,7 +445,7 @@ class Datagrid extends UI\Control
 
 
 
-	protected function attached($presenter)
+	protected function attached(\Nette\ComponentModel\IComponent $obj): void
 	{
 		parent::attached($presenter);
 		$this->filterDataSource = $this->filter;
@@ -716,7 +716,7 @@ class Datagrid extends UI\Control
 
 
 
-	public function loadState(array $params)
+	public function loadState(array $params): void
 	{
 		parent::loadState($params);
 
@@ -761,8 +761,9 @@ class Datagrid extends UI\Control
 		});
 	}
 
-	public function saveState(array &$params, $reflection = NULL) {
-		parent::saveState($params, $reflection);
+	public function saveState(array &$params): void
+	{
+		parent::saveState($params);
 
 		if (isset($params['filter'])) {
 			foreach ($params['filter'] as $k => $v) {
