@@ -17,10 +17,9 @@
 		}
 	],
 	"require": {
-		"nette/application":      "~2.2",
-		"nette/component-model":  "~2.2",
-		"nette/utils":            "~2.2",
-		"nextras/latte-macros":   "^2.0"
+		"nette/application":      "~2.2|^3.0",
+		"nette/component-model":  "~2.2|^3.0",
+		"nette/utils":            "~2.2|^3.0|^4.0"
 	},
 	"extra": {
 		"branch-alias": {
