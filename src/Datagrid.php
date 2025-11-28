@@ -727,7 +727,7 @@ class Datagrid extends UI\Control
 
 
 
-	protected function createTemplate($class = NULL)
+	protected function createTemplate(?string $class = NULL): \Nette\Application\UI\Template
 	{
 		$template = parent::createTemplate($class);
 		if ($translator = $this->getTranslator()) {
